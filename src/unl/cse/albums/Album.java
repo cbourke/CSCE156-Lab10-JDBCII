@@ -98,12 +98,12 @@ public class Album {
 		}
 		
 
-		String query = "SELECT a.AlbumID    AS albumId, " +
-		               "       a.AlbumTitle AS albumTitle, " +
-				       "       a.AlbumYear  AS albumYear, " +
-				       "       b.BandID     AS bandId, " +
-				       "       a.AlbumNumber AS albumNumber " +
-				       "FROM Albums a JOIN Bands b on a.BandID = b.BandID WHERE a.AlbumID = ?";
+		String query = "SELECT a.albumId AS albumId, " +
+		               "       a.title   AS albumTitle, " +
+				       "       a.year    AS albumYear, " +
+				       "       b.bandId  AS bandId, " +
+				       "       a.number  AS albumNumber " +
+				       "FROM Album a JOIN Band b on a.bandId = b.bandId WHERE a.albumId = ?";
 		
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -131,9 +131,9 @@ public class Album {
 		}
 		
 		//now get all the songs
-		String songQuery = "SELECT s.SongTitle AS songTitle " +
-				           "FROM AlbumSongs asong JOIN Songs s ON asong.SongID = s.SongID "+
-				           "WHERE asong.AlbumID = ? ORDER BY asong.TrackNumber;";
+		String songQuery = "SELECT s.title AS songTitle " +
+				           "FROM AlbumSong t JOIN Song s ON t.songId = s.songId "+
+				           "WHERE t.albumId = ? ORDER BY t.trackNumber;";
 		try {
 			ps = conn.prepareStatement(songQuery);
 			ps.setInt(1, albumId);
@@ -200,10 +200,10 @@ public class Album {
 			throw new RuntimeException(e);
 		}
 		
-		String query = "SELECT a.AlbumTitle AS albumTitle, " +
-			           "       a.AlbumYear  AS albumYear, " +
-			           "       b.BandName   AS bandName " +
-			           "FROM Albums a LEFT JOIN Bands b on a.BandID = b.BandID";
+		String query = "SELECT a.title AS albumTitle, " +
+			           "       a.year  AS albumYear, " +
+			           "       b.name  AS bandName " +
+			           "FROM Album a LEFT JOIN Band b on a.bandId = b.bandId";
 		
 		List<Album> albums = new ArrayList<Album>();
 

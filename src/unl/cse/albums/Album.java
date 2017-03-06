@@ -31,6 +31,10 @@ public class Album {
 		this(null, title, year, new Band(bandName), null);
 	}
 
+	public Album(int albumId, String title, Integer year, int bandId, String bandName) {
+		this(albumId, title, year, new Band(bandId, bandName), null);
+	}
+
 	public Integer getAlbumId() {
 		return albumId;
 	}
@@ -201,7 +205,9 @@ public class Album {
 		}
 		
 		String query = "SELECT a.title AS albumTitle, " +
+		               "       a.albumId AS albumId, " + 
 			           "       a.year  AS albumYear, " +
+				       "       b.bandId AS bandId, " + 
 			           "       b.name  AS bandName " +
 			           "FROM Album a LEFT JOIN Band b on a.bandId = b.bandId";
 		
@@ -213,11 +219,13 @@ public class Album {
 		try {
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
-			while(rs.next()) {				
+			while(rs.next()) {
+				int albumId       = rs.getInt("albumId");
 				String albumTitle = rs.getString("albumTitle");
 				int albumYear     = rs.getInt("albumYear");
+				int bandId        = rs.getInt("bandId");
 				String bandName   = rs.getString("bandName");
-				Album a = new Album(albumTitle, albumYear, bandName);
+				Album a = new Album(albumId, albumTitle, albumYear, bandId, bandName);
 				albums.add(a);
 			}
 		} catch (SQLException e) {
